@@ -22,7 +22,7 @@ botとの個人チャットで以下のように投稿する。
 
     対戦するためのルームを作る。コマンドライン引数は位置指定のため、この順序を入れ替えてはならない。
 
-    - `-f ([0-9]{18})?` (オプションコマンド)
+    - `-f (18桁の数字)?` (オプションコマンド)
 
         `-f`コマンドで、`$lobby`コマンドの検索結果から作ったルームを除外することができる。room-idを知る人は全員入室できる。
 
@@ -31,6 +31,10 @@ botとの個人チャットで以下のように投稿する。
 - `$join algo (4桁の数字)`
 
     作られたルームに入る。
+
+- `$lobby`
+
+    対戦相手を探しているルームの一覧を返す。
 
 - `$attack (a~l) (1~11の数字)` 
 
@@ -102,26 +106,34 @@ Create multi-play room. A room number should be 4-digit integer.
     If there is a user-id after '`-f`', only designated user can enter the room.
 
 - `$join algo [0-9]{4}`
-......Join a multi-play room which is already created.
+
+    Join a multi-play room which is already created.
 
 - `$lobby`
-......Rooms seeking a player are displayed. Rooms with '-f' command are not displayed.
+
+    Rooms seeking a player are displayed. Rooms with '-f' command are not displayed.
 
 - `$attack [a-l] ([0-9]|1[01])`
-......Attack the opponent's card with your hand.
+
+    Attack the opponent's card with your hand.
 
 - `$hide`
-......Stop attack and hide your current hand into your cards.
-......Be careful that `$attack` should be done at least one time!
+
+    Stop attack and hide your current hand into your cards.
+
+    Be careful that `$attack` should be done at least one time!
 
 - `$help`
-......Open Algo Basic Dealer's help utility (this page).
+
+    Open Algo Basic Dealer's help utility (this page).
 
 - `$mashiro`
-`......Return a picture of Mashiro. See it and relax!
+
+   Return a picture of Mashiro. See it and relax!
 
 - `$quit`
-`......Quit the game. You lose automatically.
+
+   Quit the game. You lose automatically.
 
 ## System Requirement
 
