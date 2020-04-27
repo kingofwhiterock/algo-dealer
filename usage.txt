@@ -1,4 +1,4 @@
-```Algo BASIC Dealer 0.1.0
+```Algo BASIC Dealer 0.2.0
 
 Welcome to Algo Basic Dealer's help utility!
 
@@ -17,14 +17,23 @@ If your guess is failed, open your hand and an attacker changes.
 
 
 -*-*- Usage -*-*-
-See https://github.com/kingofwhiterock/algo for detailed command description.
+See https://github.com/kingofwhiterock/algo-dealer for detailed command description.
 You should type a command starting with '$'!
 
-$create algo [0-9]{4}
+$create algo [0-9]{4} <option command>
 ......Create multi-play room. A room number should be 4-digit integer.
+......<option command>
+......-f ([0-9]{18})?
+......'-f' command makes this room non-searchable with '$lobby' command.
+......With only '-f' command, it makes the room only non-searchable,
+......anyone who knows a room-id can enter the room.
+......If there is a user-id after '-f', only designated user can enter the room.
 
 $join algo [0-9]{4}
 ......Join a multi-play room which is already created.
+
+$lobby
+......Rooms seeking a player are displayed. Rooms with '-f' command are not displayed.
 
 $attack [a-l] ([0-9]|1[01])
 ......Attack the opponent's card with your hand.

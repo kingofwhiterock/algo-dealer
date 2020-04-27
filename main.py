@@ -28,7 +28,8 @@ import os
 # #########################################################################
 # python file importing
 # #########################################################################
-from manage import AlgoManager
+from algo import AlgoManager
+import sys
 
 # #########################################################################
 # TOKEN
@@ -50,30 +51,49 @@ class Front:
         self.client = client
 
     async def main(self, discord_event):
+        # checking sender type
+        if type(discord_event.channel) == discord.channel.DMChannel:
+            mode = "DM"
+        else:
+            mode = "Channel"
+
         get_text = discord_event.content
         channel_id = discord_event.channel.id
         user_id = discord_event.author.id
 
         # check {$command} or not
         if get_text:
-            if get_text[0] == '$':
+            if get_text[0] == '$' or get_text[0] == '＄':
                 obj = AlgoManager(user_id=user_id, user_text=get_text).main()
                 for i in obj.items():
                     if i[0] is None:
+                        continue
+                    if i[0] == 'f':
                         continue
                     tmp = i[1]
                     if 'png' in tmp:
                         # sending photo
                         s = "generated_img/{}".format(i[1])
-                        user = client.get_user(int(i[0]))
-                        await user.send(file=discord.File(s))
+                        # user = client.get_user(int(i[0]))
+                        # await user.send(file=discord.File(s))
+                        if mode == "DM":
+                            user = client.get_user(int(i[0]))
+                            await user.send(file=discord.File(s))
+                        elif mode == "Channel":
+                            await discord_event.channel.send(file=discord.File(s))
                     else:
                         # sending text
                         try:
-                            user = client.get_user(int(i[0]))
-                            await user.send(i[1])
+                            # user = client.get_user(int(i[0]))
+                            # await user.send(i[1])
+                            if mode == "DM":
+                                user = client.get_user(int(i[0]))
+                                await user.send(i[1])
+                            elif mode == "Channel":
+                                await discord_event.channel.send(i[1])
                         except AttributeError:
-                            pass
+                            print('AttributeError occurred.')
+                            print(sys.exc_info())
 
 
 # #########################################################################
@@ -87,9 +107,9 @@ discord_bot = Front(client)
 # #########################################################################
 @client.event
 async def on_ready():
-    print('Login')
-    user = client.get_channel(XXXXXXXXXXXXXXXXXX)  # <- 18-digits integer
-    await user.send("Got it, The server started successfully!")
+    print('Login succeeded.')
+    user = client.get_channel(XXXXXXXXXXXXXXXXXX)
+    # await user.send("Got it, The server started successfully!")
 
 
 # #########################################################################

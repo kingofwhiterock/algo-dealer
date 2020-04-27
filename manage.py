@@ -70,7 +70,7 @@ class AlgoManager:
     def help():
         """return help text"""
         # print(os.chdir())
-        with open('usage.txt', mode='r') as f:
+        with open('C:/Users/Apoi/PycharmProjects/bot/usage.txt', mode='r') as f:
             text = f.read()
             return text
 
@@ -109,6 +109,20 @@ class AlgoManager:
                        'Try another number :('
                 return {self.user_id: text}
 
+            # f-command check
+            # 0: no f-command, 1: f-command without friend code, 2: f-command with friend code
+            f_command = 0
+            if '-f' in command:
+                idx = command.index('-f')
+                try:
+                    friend_code = int(command[idx + 1])
+                    if len(str(friend_code)) == 18:
+                        f_command = 2
+                    else:
+                        f_command = 1
+                except (IndexError, ValueError):
+                    f_command = 1
+
             # create room, cards, isOpen, yamafuda
             # create yamafuda
             yamafuda = list(range(0, 24))
@@ -140,6 +154,19 @@ class AlgoManager:
                                      self.card_status, yamafuda))
                 self.connection.commit()
 
+            # f-command
+            if f_command == 1:
+                with self.connection.cursor() as cursor:
+                    sql = 'update algo set player1_id="f" where room_id = {}'.format(room_id)
+                    cursor.execute(sql)
+                    self.connection.commit()
+
+            if f_command == 2:
+                with self.connection.cursor() as cursor:
+                    sql = 'update algo set player1_id="{}" where room_id = {}'.format(friend_code, room_id)
+                    cursor.execute(sql)
+                    self.connection.commit()
+
             # return text
             text = self.player_text
             return {self.user_id: text}
@@ -150,9 +177,9 @@ class AlgoManager:
             #       room existing check
             #       room full check
             #       first attack second attack
-            #       draw the next card
-            # command syntax check
+            #       draw the next
 
+            # command syntax check
             try:
                 command = self.user_text.split()
                 room_id = command[2]
@@ -178,8 +205,13 @@ class AlgoManager:
 
             # room full check
             if results['player1_id'] is not None:
-                text = 'Sorry, the room is already full :('
-                return {self.user_id: text}
+                if results['player1_id'] == 'f':
+                    pass
+                elif results['player1_id'] != str(self.user_id):
+                    text = 'Sorry, the room is already full :('
+                    return {self.user_id: text}
+                else:
+                    pass
 
             text = self.joined_text
 
@@ -212,6 +244,9 @@ class AlgoManager:
 
             # return objects
             return {results['player1_id']: text, results['player0_id']: img_title_0, results['player1_id']: img_title_1}
+
+        else:
+            return {}
 
     def attack(self, now_user, results, cs):
         t = self.user_text.split()
@@ -509,6 +544,8 @@ class AlgoManager:
             return self.hide(now_user=now_user, results=results)
         elif "$quit" in self.user_text:
             return self.interrupt(now_user=now_user, results=results)
+        else:
+            return {}
 
     def main(self):
         if '$help' in self.user_text:
@@ -517,6 +554,20 @@ class AlgoManager:
         if '$mashiro' in self.user_text:
             img = '{}.png'.format(random.randint(100, 109))
             return {self.user_id: img}
+
+        if '$lobby' in self.user_text:
+            with self.connection.cursor() as cursor:
+                sql = 'select * from algo where player1_id is null'
+                cursor.execute(sql)
+                lobby_lst = cursor.fetchall()
+
+            # make lobby text
+            text = 'Found {}.\n'.format(len(lobby_lst))
+            text += '```| room_id |  host  |\n'
+            for i in lobby_lst:
+                text += '|  ' + str(i['room_id']) + '   | ' + i['player0_id'][0: 4] + '...|\n'
+            text += '```'
+            return {self.user_id: text}
 
         # check the text sender is playing the game or not
         with self.connection.cursor() as cursor:
