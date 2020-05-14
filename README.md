@@ -159,6 +159,7 @@ Following library should be installed.
 
 ## Developing Utility
 1. Count a user's win-lose (ranking system).
+1. Develop Japanese edition.
 
 ## Caution
 We don't bear any responsibility for using this source code.
