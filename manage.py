@@ -4,7 +4,7 @@
 # 
 # 2020/04/19
 # written by: Apoi
-# version: 0.1.0
+# version: 0.3.0
 # 
 # #########################################################################
 # 
@@ -309,10 +309,13 @@ class AlgoManager:
             yamafuda = deque(map(int, results['yamafuda'].split()))
 
             # draw the next card
-            try:
-                next_hand = yamafuda.popleft()
-            except IndexError:
-                next_hand = None
+            tmp = 'player{}_hand'.format(now_user)
+            next_hand = results[tmp]
+            if next_hand is None:  # next_hand is None?
+                try:
+                    next_hand = yamafuda.popleft()
+                except IndexError:
+                    next_hand = None
 
             # is now_user the winner?
             if (len(yamafuda) == 0 and next_hand is not None) or 0 not in open_lst:
@@ -404,6 +407,11 @@ class AlgoManager:
                 # player_isOpen
                 cursor.execute('update algo set {}="{}" where room_id={}'
                                .format(tmp_opn, ' '.join(map(str, opn_lst)), results['room_id']))
+                
+                # delete now_user's hand
+                s = 'player{}_hand'.format(now_user)
+                cursor.execute('update algo set {}=NULL where room_id={}'
+                               .format(s, results['room_id']))
 
                 # opponents hand
                 s = 'player{}_hand'.format(atkr)
@@ -435,6 +443,7 @@ class AlgoManager:
 
     def hide(self, now_user, results):
         # TODO: check a text sender is an attacker
+        #       check hide without attack
         #       insert the hand into player_card
         #       insert 0 into player_isOpen
         #       attacker -> change
@@ -448,6 +457,12 @@ class AlgoManager:
                 raise IsNoAttackerError
         except IsNoAttackerError:
             return {self.user_id: self.invalid_text}
+        
+        # check hide without attack
+        s = 'player{}_hand'.format(now_user)
+        hide_wo_atk_txt = 'Hmmm, you should attack at least once for each of your turn, but you did? I don\'t think so :-('
+        if results[s] is None:
+            return {self.user_id, hide_wo_atk_txt}
 
         # insert the hand into player_card
         tmp_cards = 'player{}_cards'.format(now_user)
@@ -478,6 +493,11 @@ class AlgoManager:
             # player_isOpen
             cursor.execute('update algo set {}="{}" where room_id={}'
                            .format(tmp_opn, ' '.join(map(str, opn_lst)), results['room_id']))
+
+            # delete now_user's hand
+            s = 'player{}_hand'.format(now_user)
+            cursor.execute('update algo set {}=NULL where room_id={}'
+                           .format(s, results['room_id']))
 
             # opponents hand
             s = 'player{}_hand'.format(atkr)
@@ -552,7 +572,7 @@ class AlgoManager:
             return {self.user_id: AlgoManager.help()}
 
         if '$mashiro' in self.user_text:
-            img = '{}.png'.format(random.randint(100, 109))
+            img = '{}.png'.format(random.randint(100, 111))
             return {self.user_id: img}
 
         if '$lobby' in self.user_text:

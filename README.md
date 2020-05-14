@@ -2,6 +2,11 @@
 ## はじめに
 カードゲーム「[algo](https://www.sansu-olympic.gr.jp/algo/)」をDiscord上で遊べるようにしたものである。2人でのマルチプレイ専用となる。
 
+## `0.3.0` アップデートの概要
+1. `$attack`せずに`$hide`する禁止行為を防ぐ機能を実装。
+
+1. `$attack`毎に手札が変わる問題を修正。
+
 ## ルール
 1. 0から11までのカードが白黒の2種類、計24枚ある。プレイヤーは最初に4枚ずつカードを配られ、相手に伏せて左から数字の小さい順に並べる。同じ数字の場合は、黒が小さいとする。
 
@@ -55,7 +60,7 @@ botとの個人チャットで以下のように投稿する。
 
 - `$mashiro` 
 
-    おまけです。
+    推しの画像を愛でる機能。倉田ましろの写真を返す。異論は認めない。
 
 ## 環境
 `Windows 10 Home (version:1903)`での動作を確認している。
@@ -71,14 +76,19 @@ botとの個人チャットで以下のように投稿する。
 `pymysql 0.9.3`
 
 ## 今後の予定
-1. `$attack`をせずに`$hide`する禁止行為を防ぐ機能を実装する。
-2. ユーザの勝敗数を記録し、ランキングを作る。
+1. ユーザの勝敗数を記録し、ランキングを作る。
+
+2. 日本語に完全対応する予定。
 
 ## お断り
 本ソースコードの実行によって発生したいかなる損害に対しても責任は負いかねます。また、高負荷のかかる環境での動作確認はしておりません。
  
 # Algo Basic Dealer on Discord (for international readers)
 Play a card game named "algo basic" on discord.
+
+# About `0.3.0` update
+1. We developed a new function which prevent hide-without-attack.
+1. We fixed the bug.
 
 ## Rule
 See https://www.sansu-olympic.gr.jp/algo/ for detailed rules.
@@ -148,8 +158,7 @@ Following library should be installed.
 `pymysql == 0.9.3`
 
 ## Developing Utility
-1. Develop checking hide-without-attack method.
-2. Count a user's win-lose (ranking system).
+1. Count a user's win-lose (ranking system).
 
 ## Caution
 We don't bear any responsibility for using this source code.

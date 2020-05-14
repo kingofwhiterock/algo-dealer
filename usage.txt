@@ -1,4 +1,4 @@
-```Algo BASIC Dealer 0.2.0
+```Algo BASIC Dealer 0.3.0
 
 Welcome to Algo Basic Dealer's help utility!
 
@@ -52,9 +52,8 @@ $quit
 ......Quit the game. You lose automatically.
 
 -*-*- developing utility -*-*-
-Version 1.0.0 will release on 20XX/XX/XX.
-1. Develop checking hide-without-attack method.
-2. Count a user's win-lose (ranking system).
+Version 1.0.0 will release soon!
+1. Count a user's win-lose (ranking system).
 
 
 -*-*- contact -*-*-

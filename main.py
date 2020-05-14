@@ -4,7 +4,7 @@
 #
 # 2020/04/19
 # written by: Apoi
-# version: 0.1.0
+# version: 0.3.0
 #
 # #########################################################################
 #
@@ -28,7 +28,7 @@ import os
 # #########################################################################
 # python file importing
 # #########################################################################
-from algo import AlgoManager
+from manage import AlgoManager
 import sys
 
 # #########################################################################
@@ -108,7 +108,7 @@ discord_bot = Front(client)
 @client.event
 async def on_ready():
     print('Login succeeded.')
-    user = client.get_channel(XXXXXXXXXXXXXXXXXX)
+    user = client.get_channel(702850745526911017)
     # await user.send("Got it, The server started successfully!")
 
 
